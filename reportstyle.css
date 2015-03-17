@@ -1,0 +1,45 @@
+body{
+	margin-left: 20%;
+	margin-right: 20%;
+}
+
+/* for listing errors */
+ol{
+	list-style-type: none;
+	padding-left: 20px;
+	color: red;
+}
+
+
+h3, h4, p{
+	padding-left: 20px;
+	
+}
+
+#banner, #footer{
+
+	background-color: #e0e0e0;
+	border-bottom-style:solid;
+	border-bottom: double #595b67;
+	border-radius: 10px;
+	box-shadow: 5px 5px 5px #888888;
+}
+
+#banner{
+	padding-top: 25px;
+	padding-bottom: 25px;
+	padding-left: 20px;
+}
+
+#footer{
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 20px;
+	font-style: italic;
+}
+
+img{
+	width: 50px;
+	padding-left: 20px;
+}
+	
