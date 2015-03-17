@@ -37,11 +37,11 @@ def getDueTime(section, lab_num):
     ''' end = datetime.datetime(2014, 4, 28, 22, 59) '''
     if section == 6:
         dt += datetime.timedelta(days=1)
-        if section == 10:
-            dt += datetime.timedelta(days=2)
-            if section == 16:
-                dt += datetime.timedelta(days=7)
-                
+    if section == 10:
+        dt += datetime.timedelta(days=2)
+    if section == 16:
+        dt += datetime.timedelta(days=7)
+        
     interval = lab_num
     
     ''' special case : lab 1 is always extended '''
@@ -49,29 +49,29 @@ def getDueTime(section, lab_num):
         due = dt + datetime.timedelta(weeks=2)
     else:
         due = dt + datetime.timedelta(weeks=interval)
-        
+    
     return due
 
 def showFileInfo(filename):
-    fp = open(filename)
-    fileStats = os.fstat(fp.fileno())
-    #fileStats = os.stat(filename)
+        fp = open(filename)
+        fileStats = os.fstat(fp.fileno())
+        #fileStats = os.stat(filename)
 
         fileInfo = {
             'Last Modified' : time.ctime(fileStats[stat.ST_MTIME]),
             'Last Accessed' : time.ctime(fileStats[stat.ST_ATIME]),
             'Creation Time' : time.ctime(fileStats[stat.ST_CTIME])
-        }
+            }
  
         for infoField, infoValue in fileInfo.items():
             print '         --  ' , infoField, ':' , infoValue
-            
+         
         fp.close()
 
 def getSubmissionTime(filename):
     print "last modified time : %s" % time.ctime(os.path.getmtime(filename))
     '''print "created: %s" % time.ctime(os.path.getctime(file))'''
-    
+   
     return time.ctime(os.path.getmtime(filename))
 
 def isLateSubmission(sub_time, due):
@@ -82,7 +82,7 @@ def isLateSubmission(sub_time, due):
     if due < sub:
         print '\n late work '
         return True
-        
+    
     return False      
 
         
@@ -96,78 +96,78 @@ def copyanything(src, dst):
 
 # trim last newline character in a string variable
 def getFolderName(a):
-    n = len(a)- 1
-    c=a[0]
-    for i in range(1,n):
-        c = c+a[i]
-        
+        n = len(a)- 1
+        c=a[0]
+        for i in range(1,n):
+                c = c+a[i]
+     
         return c
 
 def showLabFiles(rootdir):
-    fileIdx = 0;
-    #L = [] # a list holds file name
-    for file in os.listdir(rootdir):
-        if fnmatch.fnmatch(file, '*.html') or fnmatch.fnmatch(file, '*.css'):
-            #L.append(file)
-            fileIdx +=1
-            print "["+str(fileIdx)+"]  ",
-            print file
-            fullname=rootdir+file
-            #getSubmissionTime(fullname)
+        fileIdx = 0;
+        #L = [] # a list holds file name
+        for file in os.listdir(rootdir):
+                if fnmatch.fnmatch(file, '*.html') or fnmatch.fnmatch(file, '*.css'):
+                        #L.append(file)
+                        fileIdx +=1
+                        print "["+str(fileIdx)+"]  ",
+                        print file
+                        fullname=rootdir+file
+                        #getSubmissionTime(fullname)
 
 
 def labFileList(uscid):
-    # call after lab folder validation
-    rootdir = getLabFolder(uscid)
-    L = []
-    for file in os.listdir(rootdir):
-        if fnmatch.fnmatch(file, '*.html') or fnmatch.fnmatch(file, '*.css'):
-            L.append(file)
-            return L
-            
+        # call after lab folder validation
+        rootdir = getLabFolder(uscid)
+        L = []
+        for file in os.listdir(rootdir):
+                if fnmatch.fnmatch(file, '*.html') or fnmatch.fnmatch(file, '*.css'):
+                        L.append(file)
+        return L
+        
 
 def getFolderPath(uscid):
-    return '\\\\fs.cl.sc.edu\\USERS\\'+getFolderName(uscid)+'\\'
+        return '\\\\fs.cl.sc.edu\\USERS\\'+getFolderName(uscid)+'\\'
 
 #lab folder validation
 def isLabFolder(uscid):
-    userfolder = getFolderPath(uscid)
-    #for item in glob.glob('\\\\fs.cl.sc.edu\\USERS\\*'):
-    for item in glob.glob(userfolder):
-        #print item
-        if os.path.isdir(item+'All_102Submissions\\'):
-            rootdir = item+"All_102Submissions\\"
-            print "_____________________________"
-            print "\nShow files : " + uscid
-            # only show html and css files
-            showLabFiles(rootdir)
-            return True
-            
+        userfolder = getFolderPath(uscid)
+        #for item in glob.glob('\\\\fs.cl.sc.edu\\USERS\\*'):
+        for item in glob.glob(userfolder):
+                #print item
+                if os.path.isdir(item+'All_102Submissions\\'):
+                        rootdir = item+"All_102Submissions\\"
+                        print "_____________________________"
+                        print "\nShow files : " + uscid
+                        # only show html and css files
+                        showLabFiles(rootdir)
+                        return True
+                        
         return False
 
 # index file validation
 def isIndexFile(uscid):
-    userfolder = getFolderPath(uscid)
-    for item in glob.glob(userfolder):
-        if isLabFolder(uscid):
-            if os.path.isfile(item+'All_102Submissions\\All_Index.html'):
-                return True
+        userfolder = getFolderPath(uscid)
+        for item in glob.glob(userfolder):
+                if isLabFolder(uscid):
+                        if os.path.isfile(item+'All_102Submissions\\All_Index.html'):
+                                return True
 
         return False
 
 def getLabFolder(uscid):
-    labfolder = getFolderPath(uscid)+'All_102Submissions\\'
-    return labfolder
+        labfolder = getFolderPath(uscid)+'All_102Submissions\\'
+        return labfolder
 
 def getIndexPage(uscid):
-    # call this function after index file validation
-    indexPage = getFolderPath(uscid)+'All_102Submissions\\All_Index.html'
-    return indexPage
-    
+        # call this function after index file validation
+        indexPage = getFolderPath(uscid)+'All_102Submissions\\All_Index.html'
+        return indexPage
+        
 def getCmd():
-    cmd = raw_input('[0] Stop grading\n[1] Grade in order \n[2] Search user to grade\n\
+        cmd = raw_input('[0] Stop grading\n[1] Grade in order \n[2] Search user to grade\n\
 [3] Copy folder to local drive\n[4] Enter score directly\n[5] Show users id\nSelect : ')
-    return cmd
+        return cmd
 
 def addComments(report):
     #global report
@@ -176,21 +176,21 @@ def addComments(report):
 
 
 def evaluate(num_errors, is_late, report):
-    #global report
-    score = 100
-    ''' errors must be an integer'''
-    report.addcontent('<p><b>File Validation Result : </b>  ')
-    if num_errors > 0:
-        print 'You have ', num_errors, ' syntax errors.'
-        report.addcontent(' You have %d syntax errors ...  ' %num_errors)
-        if num_errors > 40:
-            print ' -40 '
-            report.addcontent(' -40 </p>')
-            score -= 40
-        else:
-            print ' -', num_errors
-            report.addcontent(' -%d </p>' %num_errors)
-            score -= num_errors
+        #global report
+        score = 100
+        ''' errors must be an integer'''
+        report.addcontent('<p><b>File Validation Result : </b>  ')
+        if num_errors > 0:
+            print 'You have ', num_errors, ' syntax errors.'
+            report.addcontent(' You have %d syntax errors ...  ' %num_errors)
+            if num_errors > 40:
+                print ' -40 '
+                report.addcontent(' -40 </p>')
+                score -= 40
+            else:
+                print ' -', num_errors
+                report.addcontent(' -%d </p>' %num_errors)
+                score -= num_errors
         else:
             report.addcontent(' NO syntax errors </p>')
 
@@ -202,7 +202,7 @@ def evaluate(num_errors, is_late, report):
             score -= 15
         else:
             report.addcontent(' NO </p>')
-            
+        
         ''' 1. check index image '''
         index_image = raw_input('\nMissing index image?(y/n)')
         report.addcontent('<p><b>Missing index image? </b>  ')
@@ -276,8 +276,8 @@ def evaluate(num_errors, is_late, report):
                     break
                 else:
                     addComments(report)
-                else:
-                    report.addcontent(' NO </p>')
+        else:
+            report.addcontent(' NO </p>')
 
         ''' 7. Extra credits '''
         extra_credit = raw_input('\nExtra Credits for creativity?(y/n)')
@@ -288,47 +288,47 @@ def evaluate(num_errors, is_late, report):
             score += 10
         else:
             report.addcontent(' NO </p>')
-            
+           
             
         return score
         
 def gradeUserFile(uscid, due_time, section, lab_num):
-    
+        
         global out_dir
         report = markup.page()
         report.init(title="Grade Report",
-                    css="http://www.cse.sc.edu/~song24/reportstyle.css",
-                    header='<h2 id="banner">Grade Report</h2>',
-                    footer='<h4 id="footer">By Yang Song &nbsp; song24@email.sc.edu </h4>')
+        css="http://www.cse.sc.edu/~song24/reportstyle.css",
+        header='<h2 id="banner">Grade Report</h2>',
+        footer='<h4 id="footer">By Yang Song &nbsp; song24@email.sc.edu </h4>')
         report.addcontent('<h3> Section '+ section +' -- Lab '+lab_num )
         report.addcontent('Due : %s/%s/%s 22:59:00 </h3>' %(due_time.month, due_time.day, due_time.year))
 
         final_score = 0
         #if isIndexFile(uscid):
         if isLabFolder(uscid):
-            response = raw_input('\nOpen Current index page (y)\nOpen NEXT index page (n)\n\
+                response = raw_input('\nOpen Current index page (y)\nOpen NEXT index page (n)\n\
 Select file to grade (Enter file index NO)\nReturn to main menu (r)\nEND grading (e): ')
-            L = labFileList(uscid)
-            if response == "y":
-                #print " ---- Open Index ---- "
-                webbrowser.open_new_tab(getIndexPage(uscid))
-            elif response == "n":
-                print " .... Open Next Index ..."
-            elif response == "r":
-                return 0
-            elif response == "e":
-                print "GoodBye"
-                sys.exit()                        
-            else:
-                # open selected files
-                prefix = getLabFolder(uscid)
-                webbrowser.open_new_tab(prefix+L[int(float(response))-1])
-                
+                L = labFileList(uscid)
+                if response == "y":
+                        #print " ---- Open Index ---- "
+                        webbrowser.open_new_tab(getIndexPage(uscid))
+                elif response == "n":
+                        print " .... Open Next Index ..."
+                elif response == "r":
+                        return 0
+                elif response == "e":
+                        print "GoodBye"
+                        sys.exit()                        
+                else:
+                        # open selected files
+                        prefix = getLabFolder(uscid)
+                        webbrowser.open_new_tab(prefix+L[int(float(response))-1])
+                        
                         report.addcontent('<h3> User ID :  %s </h3>' %uscid[0:(uscid.__len__()-1)])
 
                         sub_time = getSubmissionTime(prefix+L[int(float(response))-1])
                         is_late = isLateSubmission(sub_time, due_time)
-                        
+                         
                         str_sub_time = ('<p>Last modified time : %s </p>' %sub_time)
                         report.addcontent(str_sub_time)
                         
@@ -336,9 +336,9 @@ Select file to grade (Enter file index NO)\nReturn to main menu (r)\nEND grading
                         dest = 'tmp'
                         ''' clean tmp folder first '''
                         if os.path.exists(dest):                               
-                            print 'tmp folder already exist, clean it now'
-                            shutil.rmtree('/tmp')        
-                            
+                                print 'tmp folder already exist, clean it now'
+                                shutil.rmtree('/tmp')        
+                        
                         shutil.copytree(source, dest)
                         print 'finished copying user folder to tmp '
                         html_file = dest+'/'+L[int(float(response))-1]
@@ -355,7 +355,7 @@ Select file to grade (Enter file index NO)\nReturn to main menu (r)\nEND grading
                             num_errors += css_errors
                             
                         final_score = evaluate(num_errors, is_late, report)                    
-                        
+                            
                         print 'Final score is :', final_score
                         report.addcontent('<h3> Final Score : %d </h3>' %final_score)
                         
@@ -372,40 +372,40 @@ Select file to grade (Enter file index NO)\nReturn to main menu (r)\nEND grading
                         print 'Finished generating grade report for ', uscid
                         
                 del L[:]
-            else:
+        else:
                 print uscid+" has no valid foler"
                 userfolder = getFolderPath(uscid)
                 webbrowser.open(userfolder)
                 return 0
-                
+   
         
         return 1
 
 def searchUser(char, ID, due_time, section, lab_num):                      
-    potential_users = []
-    charIdx = 0
-    for allids in ID:
-        if char == allids[0][:1]:
-            potential_users.append(allids)
-            charIdx += 1
-            print "["+str(charIdx)+"]  ",
-            print allids
-            target_user_idx = raw_input('Enter User Number: ')
-            target_idx = int(float(target_user_idx))
-            if target_idx > len(potential_users) or target_idx < 1:
+        potential_users = []
+        charIdx = 0
+        for allids in ID:
+                if char == allids[0][:1]:
+                        potential_users.append(allids)
+                        charIdx += 1
+                        print "["+str(charIdx)+"]  ",
+                        print allids
+        target_user_idx = raw_input('Enter User Number: ')
+        target_idx = int(float(target_user_idx))
+        if target_idx > len(potential_users) or target_idx < 1:
                 print "Error: Input number out of range !"
-            else:
+        else:
                 new_uscid = potential_users[target_idx - 1]
                 gradeUserFile(new_uscid, due_time, section, lab_num)                                    
-                
+                                                                        
         del potential_users[:]
 
 def showUsers(ID):
-    count = 0
-    for uscid in ID:
-        count += 1
-        print "["+str(count)+"] ", 
-        print ID[count-1]  
+        count = 0
+        for uscid in ID:
+                count += 1
+                print "["+str(count)+"] ", 
+                print ID[count-1]  
 
 
 
@@ -448,27 +448,27 @@ def validate(filename):
         else:
             cmd =  ('curl -sG -d uri=%s -d output=json %s'
                     % (quoted_filename, html_validator_url))
+    else:
+        # Upload file as multipart/form-data with POST.
+        if filename.endswith('.css'):
+            cmd =  ('curl -sF "file=@%s;type=text/css" -F output=json -F warning=0 %s'
+                    % (quoted_filename, css_validator_url))
         else:
-            # Upload file as multipart/form-data with POST.
-            if filename.endswith('.css'):
-                cmd =  ('curl -sF "file=@%s;type=text/css" -F output=json -F warning=0 %s'
-                        % (quoted_filename, css_validator_url))
-            else:
-                cmd = ('curl -sF "uploaded_file=@%s;type=text/html"  -F output=json %s'
-                       % (quoted_filename, html_validator_url))
-                #verbose(cmd)
-                status = os.system(cmd)
-                f = os.popen(cmd)
-                output = f.read()
-                if status != 0:
-                    raise OSError (status, 'failed: %s' % cmd)
-                    #verbose(output)
-                    try:
-                        result = json.loads(output)
-                    except ValueError:
-                        result = ' '
-                        time.sleep(2)   # Be nice and don't hog the free validator service.
-                        return result
+            cmd = ('curl -sF "uploaded_file=@%s;type=text/html"  -F output=json %s'
+                   % (quoted_filename, html_validator_url))
+    #verbose(cmd)
+    status = os.system(cmd)
+    f = os.popen(cmd)
+    output = f.read()
+    if status != 0:
+        raise OSError (status, 'failed: %s' % cmd)
+    #verbose(output)
+    try:
+        result = json.loads(output)
+    except ValueError:
+        result = ' '
+    time.sleep(2)   # Be nice and don't hog the free validator service.
+    return result
 
 def get_errors(f, report):
     #global report
@@ -484,22 +484,22 @@ def get_errors(f, report):
         warnings += warningcount
         if errorcount > 0:
             message('errors: %d' % errorcount)
-            if warningcount > 0:
-                message('warnings: %d' % warningcount)
-            else:
-                #print '**************************************\n', result
-                for msg in result['messages']:
-                    
+        if warningcount > 0:
+            message('warnings: %d' % warningcount)
+    else:
+        #print '**************************************\n', result
+        for msg in result['messages']:
+            
             if 'lastLine' in msg:
                 message('%(type)s: line %(lastLine)d: %(message)s' % msg)
                 report.addcontent('<li> %(type)s: line %(lastLine)d: %(message)s </li>' %msg)
             else:
                 message('%(type)s: %(message)s' % msg)
                 report.addcontent('<li> %(type)s: %(message)s </li>' %msg)
-                if msg['type'] == 'error':
-                    errors += 1
-                else:
-                    warnings += 1
+            if msg['type'] == 'error':
+                errors += 1
+            else:
+                warnings += 1
 
     report.addcontent('</ol>')
     print 'Total Syntax Errors: ', errors
@@ -518,10 +518,10 @@ if __name__ == "__main__":
         
     filename = section+'.txt'
     if os.path.isfile(filename):
-        print "Read text file " + filename
+            print "Read text file " + filename
     else:
-        print "No file "+filename
-        sys.exit(0)
+            print "No file "+filename
+            sys.exit(0)
 
 ##    user_dict = {}  
 ##    with open(filename, 'r') as f:
@@ -540,17 +540,17 @@ if __name__ == "__main__":
     count = 0     
     fp = open(filename, 'r')  
     while 1:
-        uscid = fp.readline()
-        #print uscid,
-        if not uscid:
-            break
+            uscid = fp.readline()
+            #print uscid,
+            if not uscid:
+                    break
             # do sth.
-        else:
-            count += 1
-            ID.append(uscid)
-            print "["+str(count)+"] ", 
-            print ID[count-1]
-            
+            else:
+                    count += 1
+                    ID.append(uscid)
+                    print "["+str(count)+"] ", 
+                    print ID[count-1]
+                  
     fp.close()
     
     due_time =  getDueTime(int(section), int(lab_num))
@@ -559,10 +559,10 @@ if __name__ == "__main__":
     if time_confirm == 'n':
         due_time = obtainTime()
         print 'Due time redefined as', due_time
-        
+   
     
     while True:
-        
+            
             print "_____________________________"
             print "         Main Menu           "
             print "_____________________________"
@@ -576,47 +576,47 @@ if __name__ == "__main__":
             5 : show user id list 
             ''' 
             if cmd == 0:
-                break
+                    break
             elif cmd == 1:
-                for uscid in ID:
-                    gradeUserFile(uscid, due_time, section, lab_num)
-                    #if gradeUserFile(uscid, due_time, section, lab_num) == 0:
-                    #    break
-                    
-            elif cmd == 2:
-                char = raw_input('Enter only the first letter of USC ID:' )
-                searchUser(char, ID, due_time, section, lab_num)
-            elif cmd == 3:
-                drive = raw_input('Enter Target Path: (eg: H:\\newfolder) : ')
-                ans = raw_input('[1] Copy all users\' folders \n[2] Copy single user foler\n Select:')
-                if ans == "1":
                     for uscid in ID:
-                        src = getFolderPath(uscid)
-                        dst = getFolderName(drive)+getFolderName(uscid)+'\\'
-                        print "copy folder of "+uscid
-                        copyanything(src, dst)
-                        print "Finish!"
+                        gradeUserFile(uscid, due_time, section, lab_num)
+                        #if gradeUserFile(uscid, due_time, section, lab_num) == 0:
+                        #    break
+                                               
+            elif cmd == 2:
+                    char = raw_input('Enter only the first letter of USC ID:' )
+                    searchUser(char, ID, due_time, section, lab_num)
+            elif cmd == 3:
+                    drive = raw_input('Enter Target Path: (eg: H:\\newfolder) : ')
+                    ans = raw_input('[1] Copy all users\' folders \n[2] Copy single user foler\n Select:')
+                    if ans == "1":
+                            for uscid in ID:
+                                    src = getFolderPath(uscid)
+                                    dst = getFolderName(drive)+getFolderName(uscid)+'\\'
+                                    print "copy folder of "+uscid
+                                    copyanything(src, dst)
+                            print "Finish!"
                     elif ans=="2":
-                        showUsers(ID)
-                        num = raw_input('Enter user\' number :')
-                        src_idx = int(float(num))-1
-                        src = getFolderPath(ID[src_idx])
-                        dst = getFolderName(drive)+getFolderName(ID[src_idx])+'\\'
-                        copyanything(src, dst)
-                        print "Finish!"
+                            showUsers(ID)
+                            num = raw_input('Enter user\' number :')
+                            src_idx = int(float(num))-1
+                            src = getFolderPath(ID[src_idx])
+                            dst = getFolderName(drive)+getFolderName(ID[src_idx])+'\\'
+                            copyanything(src, dst)
+                            print "Finish!"
                     else:
-                        print "Invalid input. Bye"
-                        #break
-                    elif cmd == 4:
-                        num = raw_input('Enter score directly : ')
-                        scores.append(num)
-                    elif cmd == 5:
-                        for i in range(0, len(ID)):
-                            print '[%d] %s' %((i+1), ID[i])
-                            
+                            print "Invalid input. Bye"
+                            #break
+            elif cmd == 4:
+                    num = raw_input('Enter score directly : ')
+                    scores.append(num)
+            elif cmd == 5:
+                    for i in range(0, len(ID)):
+                        print '[%d] %s' %((i+1), ID[i])
+                       
             else:
-                print "Invalid input. Byebye!"
-                break
+                    print "Invalid input. Byebye!"
+                    break
 
     del ID[:]
 
@@ -625,7 +625,7 @@ if __name__ == "__main__":
 ##        scores_txt.write("%s\n" % item)
 ##
 ##    scores_txt.close()
-
+        
     print "End of Script ... "
 
 

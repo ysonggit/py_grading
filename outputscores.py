@@ -37,7 +37,7 @@ def get_id_array(filename):
     id_array = []
     for line in fp:
         id_array.append( line.rstrip('\n') )
-        fp.close()
+    fp.close()
 
     return id_array
 

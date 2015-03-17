@@ -25,7 +25,7 @@ def get_user_dict(section):
             user_info = re.search(r'(\S*)\s*(\S*)', line)
             ''' key is the uscid, value is the last name '''
             my_dict[user_info.group(2)] = user_info.group(1)
-            f.close()
+    f.close()
 
 ##    for key, value in user_dict.items(): # returns the dictionary as a list of value pairs
 ##        print key, value
@@ -35,33 +35,34 @@ def get_user_dict(section):
 
 
 def mail(to, subject, text, attach):
-    msg = MIMEMultipart()
-    msg['From'] = gmail_user
-    msg['To'] = to
-    msg['Subject'] = subject
+   msg = MIMEMultipart()
 
-    msg.attach(MIMEText(text))
+   msg['From'] = gmail_user
+   msg['To'] = to
+   msg['Subject'] = subject
 
-    part = MIMEBase('application', 'octet-stream')
-    part.set_payload(open(attach, 'rb').read())
-    Encoders.encode_base64(part)
-    part.add_header('Content-Disposition',
-                   'attachment; filename="%s"' % os.path.basename(attach))
-    msg.attach(part)
+   msg.attach(MIMEText(text))
 
-    mailServer = smtplib.SMTP("smtp.gmail.com", 587)
-    mailServer.ehlo()
-    mailServer.starttls()
-    mailServer.ehlo()
-    mailServer.login(gmail_user, gmail_pwd)
-    mailServer.sendmail(gmail_user, to, msg.as_string())
-    # Should be mailServer.quit(), but that crashes...
-    mailServer.close()
+   part = MIMEBase('application', 'octet-stream')
+   part.set_payload(open(attach, 'rb').read())
+   Encoders.encode_base64(part)
+   part.add_header('Content-Disposition',
+           'attachment; filename="%s"' % os.path.basename(attach))
+   msg.attach(part)
+
+   mailServer = smtplib.SMTP("smtp.gmail.com", 587)
+   mailServer.ehlo()
+   mailServer.starttls()
+   mailServer.ehlo()
+   mailServer.login(gmail_user, gmail_pwd)
+   mailServer.sendmail(gmail_user, to, msg.as_string())
+   # Should be mailServer.quit(), but that crashes...
+   mailServer.close()
 
 
 
 gmail_user = "ysong.sc@gmail.com"
-gmail_pwd = ""
+gmail_pwd = "W_0i0n0d"
 
 section = raw_input('Enter Section number : ')
 lab_num = raw_input('Enter Lab number: ')
@@ -82,9 +83,9 @@ for filename in os.listdir(dirname):
         user_email = user_id+'@email.sc.edu'
         html_report = dirname+'/'+filename
         mail(user_email,
-             email_subject,
-             'Hello Mr./Ms. '+user_name+',\n please find the grade report attached. Let me know if you have any question.\n Yours\n Yang Song',
-             html_report)
+           email_subject,
+           'Hello Mr./Ms. '+user_name+',\n please find the grade report attached. Let me know if you have any question.\n Yours\n Yang Song',
+           html_report)
         print 'email sent to ' + user_email
 
 print 'All emails sent!'
